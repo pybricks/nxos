@@ -608,6 +608,7 @@ void tests_bt(void) {
   nx_bt_set_discoverable(TRUE);
 
   port_handle = nx_bt_open_port();
+  (void)port_handle;
 
   nx_display_clear();
   nx_display_cursor_set_pos(0, 0);
