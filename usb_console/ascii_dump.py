@@ -3,7 +3,7 @@
 # ASCII dump beautifier
 def beautify(data, size):
     s = ""
-    for i in xrange(size):
+    for i in range(size):
       s = "%s%s" % (s, chr(data[i]))
-    print s
+    print(s)
 

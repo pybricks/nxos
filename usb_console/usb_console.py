@@ -3,7 +3,7 @@
 import sys
 import os.path
 import threading
-import Queue
+import queue
 import curses
 import curses.wrapper
 import time;
@@ -28,7 +28,7 @@ def usb_thread(brick, command_queue, output_queue):
                 return
             while not (brick.write(to_brick)):
                 time.sleep(1)
-        except Queue.Empty:
+        except queue.Empty:
             pass
 
 def output_thread(stdscr, output_queue):
@@ -63,8 +63,8 @@ def init(stdscr):
         return False
     brick.open(NXOS_INTERFACE)
 
-    command_queue = Queue.Queue(1)
-    output_queue = Queue.Queue()
+    command_queue = queue.Queue(1)
+    output_queue = queue.Queue()
 
     output = threading.Thread(target=output_thread, args=[stdscr, output_queue])
     output.start()

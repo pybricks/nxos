@@ -15,32 +15,32 @@ from nxt.lowlevel import get_device
 NXOS_INTERFACE = 0
 
 def main():
-    print "Looking for NXT...",
+    print("Looking for NXT...", end=' ')
     brick = get_device(0x0694, 0xFF00, timeout=60)
     if not brick:
-        print "not found!"
+        print("not found!")
         return False
 
     brick.open(NXOS_INTERFACE)
-    print "ok."
+    print("ok.")
 
     # Read data size
-    print "Waiting for data size...",
+    print("Waiting for data size...", end=' ')
     read_size = brick.read(4, 5000)
     if not read_size:
-        print "timeout!"
+        print("timeout!")
         return False
 
     size = struct.unpack("<L", read_size)[0]
-    print "ok. Expecting %d bytes." % size
+    print("ok. Expecting %d bytes." % size)
 
     # Receive data
-    print "Receiving data...",
+    print("Receiving data...", end=' ')
     data = brick.read(size, 10000)
     if not data:
-        print "timeout!"
+        print("timeout!")
         return False
-    print "ok."
+    print("ok.")
 
     data = [ ord(i) for i in data ]
 
@@ -52,7 +52,7 @@ def main():
         from ascii_dump import beautify
         beautify(data, size)
       else:
-        print [ str(i) for i in data ]
+        print([ str(i) for i in data ])
 
     return True
 

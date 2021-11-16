@@ -2,15 +2,15 @@
 
 # I2C pin information beautifier
 def beautify(data, size):
-    print "SDA:",
+    print("SDA:", end=' ')
     s = ""
-    for i in xrange(size/2):
+    for i in range(size/2):
         s = "%s%s" % (s, data[2*i])
-    print s
+    print(s)
 
-    print "SCL:",
+    print("SCL:", end=' ')
     s = ""
-    for i in xrange(size/2):
+    for i in range(size/2):
         s = "%s%s" % (s, data[2*i+1])
-    print s
+    print(s)
 

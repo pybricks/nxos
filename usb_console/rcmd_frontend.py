@@ -44,7 +44,7 @@ class RcmdConsole(code.InteractiveConsole):
 
   def push(self, line):
     if line == 'quit' or line == 'exit':
-      print "Use Ctrl-D (i.e. EOF) to exit"
+      print("Use Ctrl-D (i.e. EOF) to exit")
       return False
 
     self.brick.write(line)
@@ -54,22 +54,22 @@ class RcmdConsole(code.InteractiveConsole):
     return False
 
 def main():
-    print "Looking for NXT...",
+    print("Looking for NXT...", end=' ')
     brick = get_device(0x0694, 0xFF00, timeout=60)
     if not brick:
-        print "not found!"
+        print("not found!")
         return False
 
     brick.open(NXOS_INTERFACE)
-    print "ok."
+    print("ok.")
 
     prompt = RcmdConsole()
     prompt.set_brick(brick)
     prompt.interact('Remote robot command console.')
 
-    print "Closing link...",
+    print("Closing link...", end=' ')
     brick.write('end')
-    print "done."
+    print("done.")
 
 if __name__ == "__main__":
     main()

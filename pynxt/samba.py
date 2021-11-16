@@ -1,6 +1,6 @@
 import sys
 import struct
-import lowlevel
+from . import lowlevel
 
 ATMEL_VENDOR_ID = 0x03eb
 SAMBA_PRODUCT_ID = 0x6124
