@@ -9,13 +9,12 @@
 
 import atexit
 import code
-import nxt
 import os
 import readline
 import struct
 import sys
 import time
-from nxt.lowlevel import get_device
+from pynxt.lowlevel import get_device
 
 NXOS_INTERFACE = 0
 

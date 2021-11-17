@@ -5,9 +5,8 @@ import os.path
 import threading
 import queue
 import curses
-import curses.wrapper
 import time
-from nxt.lowlevel import get_device
+from pynxt.lowlevel import get_device
 
 NXOS_INTERFACE = 0
 

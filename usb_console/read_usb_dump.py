@@ -7,10 +7,9 @@
 # A data size (U32, 4 bytes), immediately followed by the data itself,
 # <data size> bytes.
 
-import nxt
 import struct
 import sys
-from nxt.lowlevel import get_device
+from pynxt.lowlevel import get_device
 
 NXOS_INTERFACE = 0
 
