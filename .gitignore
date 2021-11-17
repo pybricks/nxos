@@ -23,7 +23,6 @@ pynxt/build/
 
 # Files generated during a NxOS build.
 nxos/systems/*/*.lds
-nxos/base/_font.h
 nxos/doc/*/
 
 # The TVM port has a whole SVN checkout not managed by hg.
