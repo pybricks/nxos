@@ -12,9 +12,12 @@ authors = [
     "Giovanni Simoni <simgidacav@gmail.com>"
 ]
 
+[tool.poetry.scripts]
+pynxt = 'pynxt.cli:main'
+
 [tool.poetry.dependencies]
-python = "^3.6"
-2to3 = "^1.0"
+python = "^3.8"
+argcomplete = "^1.12.3"
 
 [tool.poetry.dev-dependencies]
 
