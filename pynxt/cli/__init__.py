@@ -52,7 +52,9 @@ class Tool(ABC):
 
 class FirmwareExec(Tool):
     def add_parser(self, subparsers: argparse._SubParsersAction):
-        parser = subparsers.add_parser("fwexec", help="Load the firmware in RAM and run it.")
+        parser = subparsers.add_parser(
+            "fwexec", help="Load the firmware in RAM and run it."
+        )
         parser.tool = self
         parser.add_argument(
             "firmware",
@@ -66,8 +68,8 @@ class FirmwareExec(Tool):
         from ..samba import SambaBrick, SambaOpenError
 
         fw = args.firmware.read()
-        
-        if len(fw) > (56*1024):
+
+        if len(fw) > (56 * 1024):
             print("Error: The firmware is too big to fit in RAM.")
             print("Maximum: %d bytes, Actual: %d bytes" % (56 * 1024, len(fw)))
             sys.exit(1)
@@ -82,7 +84,7 @@ class FirmwareExec(Tool):
             s.open(timeout=5)
             print("Brick found!")
         except SambaOpenError as e:
-            print('Error: %s.' % str(e))
+            print("Error: %s." % str(e))
             return 1
 
         print("Uploading firmware...")
@@ -96,7 +98,9 @@ class FirmwareExec(Tool):
 
 class FirmwareFlash(Tool):
     def add_parser(self, subparsers: argparse._SubParsersAction):
-        parser = subparsers.add_parser("fwflash", help="Save the firmware on flash and run it.")
+        parser = subparsers.add_parser(
+            "fwflash", help="Save the firmware on flash and run it."
+        )
         parser.tool = self
         parser.add_argument(
             "firmware",
@@ -106,10 +110,10 @@ class FirmwareFlash(Tool):
         ).completer = FilesCompleter(allowednames=(".bin",))
 
     def run(self, args: argparse.Namespace):
-        
+
         from ..samba import SambaBrick, SambaOpenError
         from ..flash import FlashController
-        
+
         fw = args.firmware.read()
 
         if len(fw) > (256 * 1024):
@@ -124,7 +128,7 @@ class FirmwareFlash(Tool):
             s.open(timeout=5)
             print("Brick found!")
         except SambaOpenError as e:
-            print('Error: %s.' % e.message)
+            print("Error: %s." % e.message)
             sys.exit(1)
 
         print("Flashing firmware...")

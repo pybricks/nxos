@@ -1,5 +1,3 @@
-
-
 import math
 import os
 import os.path
@@ -8,14 +6,14 @@ from . import samba
 
 # The flash driver binary should be located directly inside the nxt
 # package.
-FLASH_DRIVER_PATH = os.path.join(os.path.dirname(__file__), 'flash_driver.bin')
+FLASH_DRIVER_PATH = os.path.join(os.path.dirname(__file__), "flash_driver.bin")
 
 # Mnemonics for the addresses of the various registers used by the flash
 # controller.
-PMC_MCKR = 0xFFFFFC30 # Master clock register
-MC_FMR = 0xFFFFFF60 # Flash mode register
-MC_FCR = 0xFFFFFF64 # Flash control register
-MC_FSR = 0xFFFFFF68 # Flash status register
+PMC_MCKR = 0xFFFFFC30  # Master clock register
+MC_FMR = 0xFFFFFF60  # Flash mode register
+MC_FCR = 0xFFFFFF64  # Flash control register
+MC_FSR = 0xFFFFFF68  # Flash status register
 
 # The addresses in ram used by the flash driver.
 FLASH_DRIVER_ADDR = 0x202000
@@ -35,16 +33,19 @@ FLASH_MEMORY_WRITE_SETTING = (0x34 << 16) | (0x1 << 8)
 # The base command to unlock a flash region, and a helper to generate the
 # correct region number.
 FLASH_REGION_UNLOCK_CMD = (0x5A << 24) | (0x4)
+
+
 def _unlock_region(region_num):
     # The unlock command must specify the page number of any page within
     # the region that you want to unlock. Since each region is 64 pages
     # long, we just multiply the page number by 64 to get into the
     # correct region.
-    return FLASH_REGION_UNLOCK_CMD | ((64*region_num) << 8)
+    return FLASH_REGION_UNLOCK_CMD | ((64 * region_num) << 8)
 
 
 class MissingFlashDriverFile(Exception):
     """Could not find the flash driver firmware image."""
+
 
 class InvalidFirmwareImage(Exception):
     """The given firmware image cannot be written."""
@@ -53,9 +54,8 @@ class InvalidFirmwareImage(Exception):
 def _get_flash_driver():
     """Open and return the flash driver binary firmwarelet."""
     if not os.path.isfile(FLASH_DRIVER_PATH):
-        raise MissingFlashDriverFile(
-            "No flash driver file at %s" % FLASH_DRIVER_PATH)
-    fd = open(FLASH_DRIVER_PATH, 'rb')
+        raise MissingFlashDriverFile("No flash driver file at %s" % FLASH_DRIVER_PATH)
+    fd = open(FLASH_DRIVER_PATH, "rb")
     driver = fd.read()
     fd.close()
     return driver
@@ -78,8 +78,8 @@ class FlashController(object):
 
         self._brick.write_word(MC_FMR, FLASH_REGION_LOCK_SETTING)
         for i in range(16):
-            mask = 1 << (16+i)
-            if (status & mask):
+            mask = 1 << (16 + i)
+            if status & mask:
                 self._brick.write_word(MC_FCR, _unlock_region(i))
                 self._wait_for_flash()
         self._brick.write_word(MC_FMR, FLASH_MEMORY_WRITE_SETTING)
@@ -109,12 +109,12 @@ class FlashController(object):
         self._prepare_flash()
 
         num_pages = int(math.ceil(len(firmware) / 256))
-        if (num_pages > 1024):
-            raise InvalidFirmwareImage(
-                "The firmware image must be smaller than 256kB")
+        if num_pages > 1024:
+            raise InvalidFirmwareImage("The firmware image must be smaller than 256kB")
 
         for page_num in range(num_pages):
             self._brick.write_word(FLASH_TARGET_BLOCK_NUM_ADDR, page_num)
-            self._brick.write_buffer(FLASH_BLOCK_DATA_ADDR,
-                                     firmware[page_num*256:(page_num+1)*256])
+            self._brick.write_buffer(
+                FLASH_BLOCK_DATA_ADDR, firmware[page_num * 256 : (page_num + 1) * 256]
+            )
             self._brick.jump(FLASH_DRIVER_ADDR)

@@ -6,7 +6,7 @@ import threading
 import queue
 import curses
 import curses.wrapper
-import time;
+import time
 from nxt.lowlevel import get_device
 
 NXOS_INTERFACE = 0
@@ -14,6 +14,7 @@ NXOS_INTERFACE = 0
 COMMAND = 0
 INPUT = 1
 OUTPUT = 2
+
 
 def usb_thread(brick, command_queue, output_queue):
     output_queue.put((COMMAND, "-- USB I/O thread up"))
@@ -31,14 +32,15 @@ def usb_thread(brick, command_queue, output_queue):
         except queue.Empty:
             pass
 
+
 def output_thread(stdscr, output_queue):
     curses.init_pair(1, curses.COLOR_GREEN, curses.COLOR_BLACK)
     curses.init_pair(2, curses.COLOR_RED, curses.COLOR_BLACK)
     curses.init_pair(3, curses.COLOR_YELLOW, curses.COLOR_BLACK)
 
-    y,x = stdscr.getmaxyx()
+    y, x = stdscr.getmaxyx()
     logpos = 1
-    log = curses.newwin(y-1,x,0,0)
+    log = curses.newwin(y - 1, x, 0, 0)
     log.border()
     log.noutrefresh()
     stdscr.noutrefresh()
@@ -48,17 +50,18 @@ def output_thread(stdscr, output_queue):
         data = output_queue.get()
         if data is None:
             return
-        log.addstr(logpos, 1, repr(data[1])[1:-1], curses.color_pair(data[0]+1))
-        #stdscr.move(y-1,0)
+        log.addstr(logpos, 1, repr(data[1])[1:-1], curses.color_pair(data[0] + 1))
+        # stdscr.move(y-1,0)
         log.noutrefresh()
         stdscr.noutrefresh()
         curses.doupdate()
         logpos += 1
         if logpos == y:
-            logpos=1
+            logpos = 1
+
 
 def init(stdscr):
-    brick = get_device(0x0694, 0xff00, timeout=60)
+    brick = get_device(0x0694, 0xFF00, timeout=60)
     if not brick:
         return False
     brick.open(NXOS_INTERFACE)
@@ -69,25 +72,26 @@ def init(stdscr):
     output = threading.Thread(target=output_thread, args=[stdscr, output_queue])
     output.start()
 
-    usb = threading.Thread(target=usb_thread,
-                           args=[brick, command_queue, output_queue])
+    usb = threading.Thread(target=usb_thread, args=[brick, command_queue, output_queue])
     usb.start()
 
     return (command_queue, output_queue, output, usb)
+
 
 def input_loop(stdscr, command_queue, output_queue):
     try:
         curses.echo()
         while True:
             mx = stdscr.getmaxyx()
-            send = stdscr.getstr(mx[0]-1,0).strip()
+            send = stdscr.getstr(mx[0] - 1, 0).strip()
             stdscr.clrtoeol()
-            output_queue.put((OUTPUT, '>> %s' % send))
+            output_queue.put((OUTPUT, ">> %s" % send))
             command_queue.put(send)
-            if send == 'halt':
+            if send == "halt":
                 break
     except KeyboardInterrupt:
         pass
+
 
 def ncurses_main(stdscr):
     ret = init(stdscr)
@@ -102,8 +106,10 @@ def ncurses_main(stdscr):
     output.join()
     usb.join()
 
+
 def main():
     curses.wrapper(ncurses_main)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     sys.exit(main())

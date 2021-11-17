@@ -19,42 +19,46 @@ from nxt.lowlevel import get_device
 
 NXOS_INTERFACE = 0
 
+
 class RcmdConsole(code.InteractiveConsole):
+    def __init__(
+        self,
+        locals=None,
+        filename="<console>",
+        histfile=os.path.expanduser("~/.nxos-rcmd.hist"),
+    ):
+        code.InteractiveConsole.__init__(self)
+        self.init_history(histfile)
 
-  def __init__(self, locals=None, filename="<console>",
-               histfile=os.path.expanduser("~/.nxos-rcmd.hist")):
-    code.InteractiveConsole.__init__(self)
-    self.init_history(histfile)
+    def init_history(self, histfile):
+        readline.parse_and_bind("tab: complete")
+        if hasattr(readline, "read_history_file"):
+            try:
+                readline.read_history_file(histfile)
+            except IOError:
+                pass
+            atexit.register(self.save_history, histfile)
 
-  def init_history(self, histfile):
-    readline.parse_and_bind("tab: complete")
-    if hasattr(readline, "read_history_file"):
-      try:
-        readline.read_history_file(histfile)
-      except IOError:
-        pass
-      atexit.register(self.save_history, histfile)
+    def save_history(self, histfile):
+        readline.write_history_file(histfile)
 
-  def save_history(self, histfile):
-    readline.write_history_file(histfile)
+    def set_brick(self, brick):
+        self.brick = brick
 
+    def push(self, line):
+        if line == "quit" or line == "exit":
+            print("Use Ctrl-D (i.e. EOF) to exit")
+            return False
 
-  def set_brick(self, brick):
-    self.brick = brick
+        self.brick.write(line)
+        if line == "end":
+            sys.exit(0)
 
-  def push(self, line):
-    if line == 'quit' or line == 'exit':
-      print("Use Ctrl-D (i.e. EOF) to exit")
-      return False
+        return False
 
-    self.brick.write(line)
-    if line == 'end':
-      sys.exit(0)
-
-    return False
 
 def main():
-    print("Looking for NXT...", end=' ')
+    print("Looking for NXT...", end=" ")
     brick = get_device(0x0694, 0xFF00, timeout=60)
     if not brick:
         print("not found!")
@@ -65,11 +69,12 @@ def main():
 
     prompt = RcmdConsole()
     prompt.set_brick(brick)
-    prompt.interact('Remote robot command console.')
+    prompt.interact("Remote robot command console.")
 
-    print("Closing link...", end=' ')
-    brick.write('end')
+    print("Closing link...", end=" ")
+    brick.write("end")
     print("done.")
+
 
 if __name__ == "__main__":
     main()

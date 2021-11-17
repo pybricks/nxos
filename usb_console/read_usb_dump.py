@@ -14,8 +14,9 @@ from nxt.lowlevel import get_device
 
 NXOS_INTERFACE = 0
 
+
 def main():
-    print("Looking for NXT...", end=' ')
+    print("Looking for NXT...", end=" ")
     brick = get_device(0x0694, 0xFF00, timeout=60)
     if not brick:
         print("not found!")
@@ -25,7 +26,7 @@ def main():
     print("ok.")
 
     # Read data size
-    print("Waiting for data size...", end=' ')
+    print("Waiting for data size...", end=" ")
     read_size = brick.read(4, 5000)
     if not read_size:
         print("timeout!")
@@ -35,24 +36,26 @@ def main():
     print("ok. Expecting %d bytes." % size)
 
     # Receive data
-    print("Receiving data...", end=' ')
+    print("Receiving data...", end=" ")
     data = brick.read(size, 10000)
     if not data:
         print("timeout!")
         return False
     print("ok.")
 
-    data = [ ord(i) for i in data ]
+    data = [ord(i) for i in data]
 
     if len(sys.argv) > 1:
-      if sys.argv[1] == 'i2c':
-        from i2c_pin_data import beautify
-        beautify(data, size)
-      elif sys.argv[1] == 'ascii':
-        from ascii_dump import beautify
-        beautify(data, size)
-      else:
-        print([ str(i) for i in data ])
+        if sys.argv[1] == "i2c":
+            from i2c_pin_data import beautify
+
+            beautify(data, size)
+        elif sys.argv[1] == "ascii":
+            from ascii_dump import beautify
+
+            beautify(data, size)
+        else:
+            print([str(i) for i in data])
 
     return True
 
