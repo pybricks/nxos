@@ -67,7 +67,7 @@ class SambaBrick(object):
         assert size in (1, 2, 4)
         self.usb.write(_command2(code, address, size))
 
-        res = self.usb.read(size)
+        res = self.usb.read(size).encode()
         return struct.unpack("<%c" % struct_code, res)[0]
 
     def read_byte(self, address):
