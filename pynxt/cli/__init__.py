@@ -11,6 +11,7 @@ import asyncio
 import logging
 import sys
 import time
+import struct
 
 from abc import ABC, abstractmethod
 from os import path
@@ -51,6 +52,27 @@ class Tool(ABC):
         pass
 
 
+class FirmwareInfo(object):
+    HEADER_DEF = "<5LB"
+    HEADER_SIZE = struct.calcsize(HEADER_DEF)
+
+    def __init__(self, fw_and_header):
+        header = fw_and_header[-self.HEADER_SIZE :]
+        self.firmware = fw_and_header[: -self.HEADER_SIZE]
+
+        (
+            magic,
+            self.ramsize,
+            self.romsize,
+            self.writeaddr,
+            self.loadaddr,
+            self.samba,
+        ) = struct.unpack(self.HEADER_DEF, header)
+        self.samba = bool(self.samba)
+        if magic != 0xDEADBEEF:
+            raise ValueError("Bad magic on header")
+
+
 class FirmwareExec(Tool):
     def add_parser(self, subparsers: argparse._SubParsersAction):
         parser = subparsers.add_parser(
@@ -69,14 +91,14 @@ class FirmwareExec(Tool):
         from ..samba import SambaBrick, SambaOpenError
 
         fw = args.firmware.read()
+        info = FirmwareInfo(fw)
+        if not info.samba:
+            raise ValueError("Firmware is not suitable for samba mode.")
 
         if len(fw) > (56 * 1024):
             print("Error: The firmware is too big to fit in RAM.")
             print("Maximum: %d bytes, Actual: %d bytes" % (56 * 1024, len(fw)))
             sys.exit(1)
-
-        # TODO: Specify as argument
-        load_addr = 0x202000
 
         s = SambaBrick()
 
@@ -89,9 +111,10 @@ class FirmwareExec(Tool):
             return 1
 
         print("Uploading firmware...")
-        s.write_buffer(load_addr, fw)
-        print("Upload complete, jumping to 0x%x..." % load_addr)
-        s.jump(load_addr)
+        s.write_buffer(info.writeaddr, fw)
+        print("Upload complete, jumping to 0x%x..." % info.loadaddr)
+        time.sleep(0.25)
+        s.jump(info.loadaddr)
         print("Firmware started.")
         s.close()
         return 0
@@ -116,6 +139,9 @@ class FirmwareFlash(Tool):
         from ..flash import FlashController
 
         fw = args.firmware.read()
+        info = FirmwareInfo(fw)
+        if info.samba:
+            raise ValueError("Firmware is not suitable for flashing.")
 
         if len(fw) > (256 * 1024):
             print("Error: The firmware is too big to fit in ROM.")
