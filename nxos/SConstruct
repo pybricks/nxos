@@ -2,7 +2,7 @@
 
 import os
 import os.path
-import new
+import types
 from glob import glob
 
 ###############################################################
@@ -197,7 +197,7 @@ def appkernel_tool(env):
             ["SAM_ONLY"],
         )
 
-    appkernel_func = new.instancemethod(AppKernel, env, env.__class__)
+    appkernel_func = types.MethodType(AppKernel, env)
     env.AppKernel = appkernel_func
 
 

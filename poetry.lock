@@ -1,4 +1,12 @@
 [[package]]
+name = "2to3"
+version = "1.0"
+description = "Adds the 2to3 command directly to entry_points."
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "argcomplete"
 version = "1.12.3"
 description = "Bash tab completion for argparse"
@@ -137,6 +145,14 @@ optional = false
 python-versions = "*"
 
 [[package]]
+name = "scons"
+version = "4.2.0"
+description = "Open Source next-generation build tool."
+category = "main"
+optional = false
+python-versions = ">=3.5"
+
+[[package]]
 name = "tomli"
 version = "1.2.2"
 description = "A lil' TOML parser"
@@ -155,9 +171,13 @@ python-versions = ">=3.6"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "da7d00b0c49c9f03c908bfdb90f179a14c642822ac440f3424444900f96de103"
+content-hash = "1c88e1b82d2628b6164c3ce6560a9ff97c56970fe16fc2229a00c2dcdabd29d7"
 
 [metadata.files]
+2to3 = [
+    {file = "2to3-1.0-py3-none-any.whl", hash = "sha256:a39fb204829c6ed90be1507f3aff1c2b4fa6734585d57a50286f039546b5fb7f"},
+    {file = "2to3-1.0.tar.gz", hash = "sha256:958bc212c928bbdcbc778b72528e0a39ae4ee8040eda6af6c3b5dd640c98ce6d"},
+]
 argcomplete = [
     {file = "argcomplete-1.12.3-py2.py3-none-any.whl", hash = "sha256:291f0beca7fd49ce285d2f10e4c1c77e9460cf823eef2de54df0c0fec88b0d81"},
     {file = "argcomplete-1.12.3.tar.gz", hash = "sha256:2c7dbffd8c045ea534921e63b0be6fe65e88599990d8dc408ac8c542b72a5445"},
@@ -256,6 +276,10 @@ regex = [
     {file = "regex-2021.11.10-cp39-cp39-win32.whl", hash = "sha256:3b5df18db1fccd66de15aa59c41e4f853b5df7550723d26aa6cb7f40e5d9da5a"},
     {file = "regex-2021.11.10-cp39-cp39-win_amd64.whl", hash = "sha256:83ee89483672b11f8952b158640d0c0ff02dc43d9cb1b70c1564b49abe92ce29"},
     {file = "regex-2021.11.10.tar.gz", hash = "sha256:f341ee2df0999bfdf7a95e448075effe0db212a59387de1a70690e4acb03d4c6"},
+]
+scons = [
+    {file = "SCons-4.2.0-py3-none-any.whl", hash = "sha256:663f819e744ddadcdf4f46b03289a7210313b86041efe1b9c8dde81dba437b72"},
+    {file = "SCons-4.2.0.tar.gz", hash = "sha256:691893b63f38ad14295f5104661d55cb738ec6514421c6261323351c25432b0a"},
 ]
 tomli = [
     {file = "tomli-1.2.2-py3-none-any.whl", hash = "sha256:f04066f68f5554911363063a30b108d2b5a5b1a010aa8b6132af78489fe3aade"},
