@@ -2,11 +2,11 @@ import math
 import os
 import os.path
 import sys
-from . import samba
 
-# The flash driver binary should be located directly inside the nxt
-# package.
-FLASH_DRIVER_PATH = os.path.join(os.path.dirname(__file__), "flash_driver.bin")
+from importlib.resources import read_binary
+
+from . import resources
+from . import samba
 
 # Mnemonics for the addresses of the various registers used by the flash
 # controller.
@@ -51,16 +51,6 @@ class InvalidFirmwareImage(Exception):
     """The given firmware image cannot be written."""
 
 
-def _get_flash_driver():
-    """Open and return the flash driver binary firmwarelet."""
-    if not os.path.isfile(FLASH_DRIVER_PATH):
-        raise MissingFlashDriverFile("No flash driver file at %s" % FLASH_DRIVER_PATH)
-    fd = open(FLASH_DRIVER_PATH, "rb")
-    driver = fd.read()
-    fd.close()
-    return driver
-
-
 class FlashController(object):
     def __init__(self, brick):
         self._brick = brick
@@ -102,7 +92,7 @@ class FlashController(object):
         self._unlock_regions()
 
         # Send the flash driver to the brick.
-        driver = _get_flash_driver()
+        driver = read_binary(resources, resources.FLASH_DRIVER)
         self._brick.write_buffer(FLASH_DRIVER_ADDR, driver)
 
     def flash(self, firmware):

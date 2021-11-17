@@ -15,6 +15,9 @@
 # The base appkernel linker script shouldn't be ignored.
 !nxos/systems/appkernel.lds
 
+# Do not ignore firmware download binary
+!pynxt/resources/flash_driver.bin
+
 # Python distutils creates this when building.
 pynxt/build/
 

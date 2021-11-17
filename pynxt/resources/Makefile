@@ -4,12 +4,12 @@
 #	objdump --disassemble-all -bbinary -marm7tdmi flash.bin > flash.asm
 #
 
-CC=`which arm-elf-gcc`
-AS=`which arm-elf-as`
-LD=`which arm-elf-ld`
-OBJCOPY=`which arm-elf-objcopy`
+CC=arm-none-eabi-gcc
+AS=arm-none-eabi-as
+LD=arm-none-eabi-ld
+OBJCOPY=arm-none-eabi-objcopy
 
-TARGET = ../flash_driver.bin
+TARGET = flash_driver.bin
 
 all:
 	$(CC) -W -Wall -Os -msoft-float -mcpu=arm7tdmi -mapcs -c -o flash.o flash.c
