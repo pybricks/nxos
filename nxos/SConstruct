@@ -96,7 +96,8 @@ def CheckLibGcc(context, gccname):
 def CheckDoxygen(context):
     context.Message("Looking for Doxygen...")
     doxypath = find_on_path("doxygen")
-    if doxypath:
+    # FIXME: Make doxygen work again with Python 3.
+    if doxypath and False:
         context.Result("ok")
         context.env.AppendENVPath("PATH", doxypath)
         context.env["WITH_DOXYGEN"] = True
@@ -254,7 +255,7 @@ env = Environment(
     toolpath=["scons_tools"],
     NXOS_LIBGCC=[],
     CPPPATH="#",
-    WITH_DOXYGEN=True,
+    WITH_DOXYGEN=False,  # FIXME
 )
 
 if not env.GetOption("clean"):
