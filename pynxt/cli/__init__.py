@@ -128,7 +128,7 @@ class FirmwareFlash(Tool):
             s.open(timeout=5)
             print("Brick found!")
         except SambaOpenError as e:
-            print("Error: %s." % e.message)
+            print(e)
             sys.exit(1)
 
         print("Flashing firmware...")
