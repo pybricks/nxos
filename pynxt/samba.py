@@ -35,7 +35,7 @@ class SambaBrick(object):
         )
         if not self.usb:
             raise SambaOpenError("Could not find a SAM-BA brick to connect to")
-        self.usb.open(SAMBA_USB_INTERFACE)
+        self.usb.open(SAMBA_USB_INTERFACE, detach_kernel_driver=True)
 
         # Initial SAM-BA handshake.
         self.usb.write("N#")

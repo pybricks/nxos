@@ -41,10 +41,12 @@ class UsbBrick(object):
         except:
             pass
 
-    def open(self, interface, configuration=1):
+    def open(self, interface, configuration=1, detach_kernel_driver=False):
         self._iface = interface
         self._config = configuration
         self._hdl = self._dev.open()
+        if detach_kernel_driver:
+            self._hdl.detachKernelDriver(interface)
         self._hdl.setConfiguration(configuration)
         self._hdl.claimInterface(interface)
 
