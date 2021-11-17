@@ -10,6 +10,7 @@ import argparse
 import asyncio
 import logging
 import sys
+import time
 
 from abc import ABC, abstractmethod
 from os import path
@@ -135,6 +136,7 @@ class FirmwareFlash(Tool):
         f = FlashController(s)
         f.flash(fw)
         print("Flashing complete, jumping to 0x100000...")
+        time.sleep(0.25)
         s.jump(0x100000)
         print("Firmware started.")
         s.close()
