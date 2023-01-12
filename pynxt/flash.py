@@ -1,12 +1,8 @@
 import math
-import os
-import os.path
-import sys
 
 from importlib.resources import read_binary
 
 from . import resources
-from . import samba
 
 # Mnemonics for the addresses of the various registers used by the flash
 # controller.

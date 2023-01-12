@@ -38,7 +38,7 @@ class UsbBrick(object):
     def __del__(self):
         try:
             self.close()
-        except:
+        except Exception:
             pass
 
     def open(self, interface, configuration=1, detach_kernel_driver=False):

@@ -7,7 +7,6 @@
 """Command line wrapper around pynxt library."""
 
 import argparse
-import asyncio
 import logging
 import sys
 import time

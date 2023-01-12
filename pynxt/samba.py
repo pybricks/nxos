@@ -1,4 +1,3 @@
-import sys
 import struct
 from . import lowlevel
 
@@ -26,7 +25,7 @@ class SambaBrick(object):
     def __del__(self):
         try:
             self.close()
-        except:
+        except Exception:
             pass
 
     def open(self, timeout=None):
