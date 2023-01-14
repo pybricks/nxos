@@ -161,7 +161,7 @@ class FirmwareFlash(Tool):
         f = FlashController(s)
         f.flash(fw)
         print("Flashing complete, jumping to 0x100000...")
-        time.sleep(0.25)
+        f._wait_for_flash()
         s.jump(0x100000)
         print("Firmware started.")
         s.close()
